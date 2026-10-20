@@ -15,6 +15,6 @@ Follow [dispatch](../manager/references/dispatch.md).
 - Read `think.md` in the task folder when present. Its decisions are inputs; its open questions need an answer or the user's acceptance as assumptions.
 - Change no production code or tests. Follow the repository's `AGENTS.md`, `CLAUDE.md`, and project-local skills.
 
-1. Read [planning.md](references/planning.md). Create or reuse the task folder, clarify requirements, and write `plan.md` and `checklist.md`. Add `investigation.md` only when diagnosis would clutter the plan.
-2. Make each step concrete enough for `develop` to run without new design decisions: affected files, public test seams, test authoring and run authorization, and delivery mode.
+1. Read [planning.md](references/planning.md). Settle the commit format first, per its section "Commit format". Create or reuse the task folder, clarify requirements, and write `plan.md` and `checklist.md`. Add `investigation.md` only when diagnosis would clutter the plan.
+2. Make each step concrete enough for `develop` to run without new design decisions: affected files, public test seams, test authoring and run authorization, the one-line commit message, and delivery mode.
 3. Return the plan and checklist for approval, and stop.

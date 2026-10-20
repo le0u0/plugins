@@ -17,6 +17,10 @@ Use a user-supplied path. Otherwise create or reuse:
 
 Name it after the ticket key plus a short kebab-case description, such as `PROJ-123-do-something`. When the work spans linked tickets, use the one the user works under. Ask when no ticket is linked; a task with no tracker uses the description alone. Use one folder per ticket across repositories; when several exist, use the oldest. Never keep task state in a repository, including `.scratch` and `docs/superpowers`.
 
+## Commit format
+
+Read `~/.agent-workflow/projects/{repository}/commit-format.md`. When it is missing or empty, ask the user for the format, with an example such as `feat: xyz` or `[PROJ-123] feat: xyz`, and save the answer there as one line plus an example. Never infer it from the git log. When the user gives a different format later, update the file. Write no `Commit` line before the format is known.
+
 ## Planning
 
 Brainstorming belongs to `think`.
@@ -45,6 +49,7 @@ Hide Export button when feature flag off.
 
 - **Do:** Add `isExportEnabled` check in `buildActions`.
 - **Test:** Spec: tab absent when flag off. Run: yes.
+- **Commit:** `feat: hide export button when flag off`
 - <sub>**Files:** `toolbar`, `toolbar.test`</sub>
 
 ## Decisions
@@ -57,15 +62,15 @@ None.
 
 ## Reference
 
-<sub>Requirement source: PROJ-123<br>Repository: /absolute/path/to/repo<br>Branch: PROJ-123-do-something<br>Initial baseline: a1b2c3d<br>Delivery: uncommitted</sub>
+<sub>Requirement source: PROJ-123<br>Repository: /absolute/path/to/repo<br>Branch: PROJ-123-do-something<br>Initial baseline: a1b2c3d<br>Delivery: per-step commits</sub>
 ```
 
 - **Goal:** one or two lines.
 - **Acceptance criteria:** observable results, one line each, key error and edge cases included.
-- **Steps:** short numbered milestones. Each has `Do`, `Test`, and `Files` in one line each. `Test` names one behavior through a public seam, one failing test first, and whether tests may run. Put test seams, temporary contracts, access-right changes, and precedents in `Do` or `Files`, only when the developer needs them.
+- **Steps:** short numbered milestones. Each has `Do`, `Test`, `Commit`, and `Files` in one line each. `Commit` is the step's one-line message in the confirmed commit format, with no body. Mark any file the step deletes `delete` in `Files`; approving the plan approves those deletions, and no other file may be deleted without asking. `Test` names one behavior through a public seam, one failing test first, and whether tests may run. Put test seams, temporary contracts, access-right changes, and precedents in `Do` or `Files`, only when the developer needs them.
 - **Decisions:** only choices that change scope or design, one line each. Link `investigation.md` when it drove one.
 - **Open:** blocking questions only, or `None.`.
-- **Reference:** `Delivery` is uncommitted by default, or per-step commits.
+- **Reference:** `Delivery` is per-step commits by default, or uncommitted when the user says so.
 
 A triage document becomes scope only through user approval. Ask before changing an approved plan. Drop superseded scope instead of marking it inactive.
 

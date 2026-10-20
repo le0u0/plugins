@@ -13,13 +13,14 @@ Follow [dispatch](../manager/references/dispatch.md).
 ## Modes
 
 - **Direct request:** implement what the user asked and report the changed files. No plan, task folder, checklist, or branch check.
+- **Failure to fix:** the manager sends a failed spec or a bug report. Diagnose per [diagnose.md](references/diagnose.md), then fix.
 - **Approved plan:** a `plan.md` from `plan`. Follow [step-execution.md](references/step-execution.md); after the last step, [validation.md](references/validation.md).
 
 ## Rules
 
-- Never create or push branches. Leave work uncommitted unless the user approves the work and the exact commit message.
-- Ask before going beyond the request or plan.
-- End-to-end coverage goes to `write-e2e`, only when the user or plan asks.
+- Never create or push branches. Commit only per the plan's per-step delivery, or when the user approves the work and the exact one-line message. Otherwise leave work uncommitted.
+- Ask before going beyond the request or plan. Never delete a file the plan does not list.
+- End-to-end coverage goes to `e2e-tester` (`write-e2e`), only when the user or plan asks.
 
 ## Workflow
 
