@@ -9,3 +9,4 @@ Claude Code plugins by Leo Ho.
 | Plugin | |
 | --- | --- |
 | [agent-workflow](agent-workflow) | Think, plan, build, test and review tickets in any project. |
+| [agent-notifier](agent-notifier) | macOS popups when Claude Code needs you or finishes. |
