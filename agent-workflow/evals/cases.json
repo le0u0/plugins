@@ -1,21 +1,21 @@
 [
   {
-    "checks": "Run-unit skill runs it directly, with no subagent. One command selects the supplied spec; bootstrap, config, specs, source, HEAD and index stay unchanged, including during execution.",
+    "checks": "Develop skill runs it directly, with no subagent, in its test-run mode. One command selects the supplied spec; bootstrap, config, specs, source, HEAD and index stay unchanged, including during execution.",
     "id": "focused-pass",
     "request": "Run only src/main/webapp/app/counter.spec.ts. Report the result.",
-    "skill": "run-unit"
+    "skill": "develop"
   },
   {
     "id": "unit-author-run",
     "skill": "manager",
     "request": "Add a regression assertion in src/main/webapp/app/counter.spec.ts that remaining(2, 5) equals -3. Then run only that spec. Leave production and test bootstrap unchanged.",
-    "checks": "Manager assigns developer to write the spec per write-unit, then unit-tester to make the authorized focused run per run-unit, in that order, starting no subagent. Spec contains a meaningful negative-result assertion and a Covered/Not Covered comment above the describe before the one exact runner invocation. No test runs before the spec is written. Production, bootstrap, configuration, HEAD, and index stay unchanged."
+    "checks": "Manager assigns developer to write the spec per write-unit and then run only that spec per its unit-tests reference, in that order, starting no other subagent. Spec contains a meaningful negative-result assertion and a Covered/Not Covered comment above the describe before the one exact runner invocation. No test runs before the spec is written. Production, bootstrap, configuration, HEAD, and index stay unchanged."
   },
   {
     "checks": "Report the injected compile failure; preserve files and selection. No broader suite or harness workaround.",
     "id": "focused-fail",
     "request": "Run only src/main/webapp/app/counter.spec.ts. Report the result.",
-    "skill": "run-unit"
+    "skill": "develop"
   },
   {
     "checks": "Review-resolver lead updates the artifact directly. Only Status changes from reviewed to approved; findings and evidence stay byte-identical; no test commands.",
@@ -55,9 +55,9 @@
   },
   {
     "id": "focused-no-rules",
-    "skill": "run-unit",
+    "skill": "develop",
     "request": "Run only src/main/webapp/app/counter.spec.ts. Report the result.",
-    "checks": "Unit-test-runner lead runs it directly. Use available CLAUDE.md despite missing .agents/rules. Execute one focused command; preserve all files and existing bootstrap edits. No request to install or create rules."
+    "checks": "Develop lead runs it directly. Use available CLAUDE.md despite missing .agents/rules. Execute one focused command; preserve all files and existing bootstrap edits. No request to install or create rules."
   },
   {
     "id": "review-inline",
@@ -68,13 +68,25 @@
   {
     "id": "step-commit",
     "skill": "develop",
-    "request": "The plan in {task}/plan.md is approved. Implement step 1 and commit it as the plan says. Do not run tests and do not push.",
-    "checks": "Develop skill implements the step itself, with no subagent. Exactly one new commit whose whole message is the plan's one-line Commit message, with no body and no trailer. The commit holds only the step's source and spec files; the pre-existing uncommitted src/test.ts edit stays uncommitted. No test command, push, branch change, or repeated approval request."
+    "request": "The plan in {task}/plan.md is approved. Implement step 1, run only its spec, and commit it as the plan says. Do not push.",
+    "checks": "Develop skill implements the step itself, with no subagent. It runs only the supplied spec with one exact runner invocation, and commits after it passes. Exactly one new commit whose whole message is the plan's one-line Commit message, with no body and no trailer. The commit holds only the step's source and spec files; the pre-existing uncommitted src/test.ts edit stays uncommitted. No push, branch change, or repeated approval request."
   },
   {
     "id": "pr-text",
     "skill": "pr",
     "request": "The review in {task}/review.md is approved and the work is done. Write the PR text and save it as {task}/pr.md.",
     "checks": "PR skill writes the exact pr.md path directly. One-line title in conventional format. Body has Summary with one visual, Evidence, and Merge Danger with a door and blast radius. Evidence reports no test result, since none ran, and does not invent one. Repository files, HEAD and index stay unchanged. No push, no PR created, no subagent."
+  },
+  {
+    "id": "e2e-scope",
+    "skill": "run-e2e",
+    "request": "The last step is done. Run the e2e specs the plan names in {task}/plan.md. Report the result.",
+    "checks": "E2E-test-runner lead runs exactly the spec file the plan's Testing section names its E2E line, with one command and a file argument, never the folder or the full suite. It reports other specs that use the changed helper under Affected without running them. No file changes, reset, or reuse of an earlier result."
+  },
+  {
+    "id": "no-test-setup",
+    "skill": "develop",
+    "request": "Change remaining(total, used) in src/main/webapp/app/counter.ts to clamp at zero. Add and run tests as the project allows. Leave the work uncommitted.",
+    "checks": "Develop skill finds the project has no unit test setup: no runner, script, or spec. It changes only counter.ts, writes no spec, installs and configures nothing, runs no test command, and says in its answer that the project has no unit test setup."
   }
 ]
