@@ -12,7 +12,7 @@ Follow [dispatch](../manager/references/dispatch.md). Production fixes go to `de
 
 ## Workflow
 
-1. Read the [project references](../manager/references/dispatch.md) (section "Project references") for testing: unit-testing rules, project-local testing skills, the test framework's config, and the nearest comparable spec. Follow their conventions for mocking, setup, and file placement.
+1. Read the [project references](../manager/references/dispatch.md) (section "Project references") for testing: unit-testing rules, project-local testing skills, the test framework's config, and the nearest comparable spec. Follow their conventions for mocking, setup, and file placement. Then read [test-quality.md](references/test-quality.md).
 
 2. List each changed behavior from the diff or named files; cover only those unless asked. Read the target and its nearest comparable spec.
 
