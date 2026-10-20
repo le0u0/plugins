@@ -1,11 +1,11 @@
 # plugins
 
-Leo Ho's Claude Code plugin marketplace.
+Claude Code plugins by Leo Ho.
 
 ```text
 /plugin marketplace add le0u0/plugins
 ```
 
-| Plugin | Description |
+| Plugin | |
 | --- | --- |
-| [`agent-workflow`](agent-workflow/README.md) | Manager, agents, and skills for ticket-driven development in any project. |
+| [agent-workflow](agent-workflow) | Think, plan, build, test and review tickets in any project. |
