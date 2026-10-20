@@ -1,0 +1,31 @@
+name: bump-version
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bump changed plugins
+        run: |
+          changed=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          bumped=""
+          for f in */.claude-plugin/plugin.json; do
+            dir=${f%%/*}
+            echo "$changed" | grep -q "^$dir/" || continue
+            echo "$changed" | grep -qx "$f" && continue
+            v=$(jq -r .version $f)
+            new=$(echo $v | awk -F. '{printf "%d.%d.%d",$1,$2,$3+1}')
+            jq --arg v "$new" '.version=$v' $f > tmp && mv tmp $f
+            bumped="$bumped $dir"
+          done
+          [ -z "$bumped" ] && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: bump version for$bumped"
+          git push
