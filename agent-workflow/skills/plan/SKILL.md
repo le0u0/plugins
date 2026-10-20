@@ -12,7 +12,7 @@ Follow [dispatch](../manager/references/dispatch.md).
 
 - Requirements come only from supplied or explicitly retrieved context. Store a supplied ticket link; never infer requirements from its key.
 - For a ticket URL or explicit lookup, run `triage-ticket` first. Its brief is context, not approved scope.
-- Read `think.md` in the task folder when present. Its decisions are inputs; its open questions need an answer or the user's acceptance as assumptions.
+- Read `think.md` in the task folder's `state/` when present. Its decisions are inputs; its open questions need an answer or the user's acceptance as assumptions.
 - Change no production code or tests. Follow the repository's `AGENTS.md`, `CLAUDE.md`, and project-local skills.
 
 1. Read [planning.md](references/planning.md). Settle the commit format first, per its section "Commit format". Create or reuse the task folder, clarify requirements, and write `plan.md` and `checklist.md`. Add `investigation.md` only when diagnosis would clutter the plan.

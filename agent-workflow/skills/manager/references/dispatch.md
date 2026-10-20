@@ -34,7 +34,7 @@ A resumed agent keeps its model and effort. Use the family alias (`haiku`, `sonn
 
 ## Task folder
 
-Task docs live in `~/.agent-workflow/tasks/{ticket}-{description}/`; see [planning.md](../../plan/references/planning.md) (section "Task folder") for its contents. Find it by globbing `~/.agent-workflow/tasks/{ticket}*`, with the ticket key from the user's message or the branch name. Several matches: use the oldest. None: ask; never assume there is no folder. Never write task docs to a scratchpad or temp directory.
+Task docs live in `~/.agent-workflow/tasks/{ticket}/`; see [planning.md](../../plan/references/planning.md) (section "Task folder") for its contents. The docs the user reads sit in the folder; plugin files (`jobs.md`, `think.md`, `triage.md`, `investigation.md`, logs) sit in its `state/` subfolder. Find it by globbing `~/.agent-workflow/tasks/{ticket}*`, with the ticket key from the user's message or the branch name. Several matches: use the oldest. None: ask; never assume there is no folder. Never write task docs to a scratchpad or temp directory.
 
 ## Storage
 
@@ -83,7 +83,7 @@ Open: <or none>
 ```
 
 - **done:** `Result` has the counts (such as `12 specs, 0 failed`) and `Commands` has exit 0. No log, no output.
-- **failed:** list each failed spec file and test name in `Result`. `Artifacts` is a log holding only the failed tests' output (name, error, top stack lines), saved in the task folder, else the system temp directory. Never send the full output. Name no cause.
+- **failed:** list each failed spec file and test name in `Result`. `Artifacts` is a log holding only the failed tests' output (name, error, top stack lines), saved in the task folder's `state/`, else the system temp directory. Never send the full output. Name no cause.
 - **blocked:** `Open` has the reason and what the manager or user should do, such as `approve a full-suite run` or `start the backend at BASE_URL`. No log.
 
 Run only the specs the task changed, never the full suite or a whole folder, unless the user asks. On a rerun after a fix, run only the previously failed specs plus the specs the fix changed. List other specs that may be affected under `Affected`, and do not run them.

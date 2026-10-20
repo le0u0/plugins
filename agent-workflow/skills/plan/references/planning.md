@@ -5,17 +5,24 @@
 Use a user-supplied path. Otherwise create or reuse:
 
 ```text
-~/.agent-workflow/tasks/{ticket}-{task-description}/
+~/.agent-workflow/tasks/{ticket}/
   plan.md
   checklist.md
   review.md
-  investigation.md  # optional
-  think.md          # from think
-  triage.md         # from triage-ticket
-  attachments/      # cached ticket files, by ticket
+  pr.md
+  testing-guide-{short-description}.md
+  attachments/        # cached ticket files, by ticket
+  state/
+    jobs.md
+    think.md          # from think
+    triage.md         # from triage-ticket
+    investigation.md  # optional
+    logs
 ```
 
-Name it after the ticket key plus a short kebab-case description, such as `PROJ-123-do-something`. When the work spans linked tickets, use the one the user works under. Ask when no ticket is linked; a task with no tracker uses the description alone. Use one folder per ticket across repositories; when several exist, use the oldest. Never keep task state in a repository, including `.scratch` and `docs/superpowers`.
+The user reads only the files above `state/`. Everything the plugin keeps for itself goes in `state/`.
+
+Name it after the ticket key, such as `PROJ-123`, to keep paths short. When the work spans linked tickets, use the one the user works under. Ask when no ticket is linked; a task with no tracker uses a short kebab-case description instead. Use one folder per ticket across repositories; when several exist, use the oldest. Never keep task state in a repository, including `.scratch` and `docs/superpowers`.
 
 ## Commit format
 
@@ -76,7 +83,7 @@ A triage document becomes scope only through user approval. Ask before changing 
 
 ## Optional investigation
 
-Create `investigation.md` only when root-cause analysis, a broad trace, or competing hypotheses would clutter `plan.md`. Gather read-only evidence yourself. Write it per the [written docs](../../manager/references/dispatch.md) (section "Written docs") rules:
+Create `investigation.md` in `state/` only when root-cause analysis, a broad trace, or competing hypotheses would clutter `plan.md`. Gather read-only evidence yourself. Write it per the [written docs](../../manager/references/dispatch.md) (section "Written docs") rules:
 
 ```markdown
 # Investigation: PROJ-123 question
