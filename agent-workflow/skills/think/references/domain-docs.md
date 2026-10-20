@@ -1,13 +1,13 @@
 # Domain Docs
 
-Domain notes live in `~/.agent-workflow/projects/{repository}/`, never in the repository. `{repository}` is the name from the `origin` remote, else the folder name.
+Domain notes live in `~/.agent-workflow/docs/`, never in a repository, so every project, ticket, and agent sees the same definitions.
 
 ```text
-glossary.md
-adr/0001-slug.md
+~/.agent-workflow/docs/glossary.md
+~/.agent-workflow/docs/adr/0001-slug.md
 ```
 
-Read the project's own `GLOSSARY.md` and `docs/adr/` too, if present. Never edit them.
+Read the repository's own `GLOSSARY.md` and `docs/adr/` too, if present, and leave them unedited.
 
 ## While asking
 
@@ -17,8 +17,16 @@ Read the project's own `GLOSSARY.md` and `docs/adr/` too, if present. Never edit
 
 ## Glossary
 
-When an answer settles a term, add it to `glossary.md`: one or two sentences saying what it is, plus `_Avoid_:` synonyms. Project-specific terms only, no implementation details.
+`glossary.md` is one table:
+
+```markdown
+| Term | Meaning | Avoid | Scope |
+| --- | --- | --- | --- |
+| Export button | Toolbar button that downloads the current view. | Download link | all |
+```
+
+Add a row only after the user confirms the term and its meaning. Keep one sentence per meaning and no implementation details. `Scope` is `all` or the project the term belongs to.
 
 ## ADR
 
-Offer one only when the decision is hard to reverse, surprising without context, and a real trade-off. After the user accepts, write the next numbered file: a title, then one to three sentences of context, decision, and why.
+Offer one only when the decision is hard to reverse, surprising without context, and a real trade-off. After the user accepts, write the next numbered file in `~/.agent-workflow/docs/adr/`: a title, then one to three sentences of context, decision, and why.

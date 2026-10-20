@@ -19,7 +19,8 @@ Every file this plugin writes lives under `~/.agent-workflow/`, so any repositor
       research-{topic}.md   # optional
       logs
   reviews/{repository}/{branch}/   # review.md, pr.md, testing guide when there is no task folder
-  projects/{repository}/           # glossary.md, adr/, commit-format.md
+  docs/                            # glossary.md and adr/, shared by every project
+  projects/{repository}/           # commit-format.md
 ```
 
 The user reads the files above `state/`. The plugin keeps everything else in `state/`.
