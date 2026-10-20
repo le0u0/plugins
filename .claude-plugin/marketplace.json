@@ -1,0 +1,14 @@
+{
+  "name": "le0u0-plugins",
+  "owner": {
+    "name": "Leo Ho"
+  },
+  "description": "Leo Ho's reusable Claude Code plugins.",
+  "plugins": [
+    {
+      "name": "agent-workflow",
+      "source": "./agent-workflow",
+      "description": "Project-agnostic manager, agents, and skills for ticket-driven development: think, plan, develop, test, review."
+    }
+  ]
+}

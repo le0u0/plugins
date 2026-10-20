@@ -1,0 +1,11 @@
+{
+  "name": "agent-workflow",
+  "displayName": "Agent Workflow",
+  "version": "1.0.0",
+  "description": "Project-agnostic manager, agents, and skills for ticket-driven development: think, plan, develop, test, review.",
+  "author": {
+    "name": "Leo Ho"
+  },
+  "repository": "https://github.com/le0u0/plugins",
+  "skills": "./skills/"
+}
