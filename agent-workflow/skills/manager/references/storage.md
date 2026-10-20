@@ -16,7 +16,6 @@ Every file this plugin writes lives under `~/.agent-workflow/`, so any repositor
       think.md
       triage.md
       diagnose.md           # optional
-      research-{topic}.md   # optional
       logs
   reviews/{repository}/{branch}/   # review.md, pr.md, testing guide when there is no task folder
   docs/                            # glossary.md and adr/, shared by every project

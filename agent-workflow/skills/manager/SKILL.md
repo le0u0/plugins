@@ -20,22 +20,22 @@ Routing authorizes nothing by itself. Tests, resets, commits, pushes, external w
 
 | Agent | Skill | Job |
 | --- | --- | --- |
-| `planner` | `think` | Find gaps and concerns in a ticket |
+| `planner`, `architect` | `think` | Find gaps and concerns in a ticket |
 | | `plan` | Plan a ticket |
 | `helper` | `triage-ticket` | Ticket requirements or queue triage |
-| | `research` | Answer a question from primary sources |
-| `developer` | `develop` | Implement the plan, run unit specs, commit each step, or diagnose a failure |
+| `developer`, `senior-developer` | `develop` | Implement the plan, run unit specs, commit each step, or diagnose a failure |
 | | `write-unit` | Write or fix unit specs |
 | | `resolve-review` | Fix or disposition findings in a saved review |
 | | `pr` | Write the PR title and body |
 | | `testing-guide` | Write the manual testing guide |
 | `e2e-tester` | `write-e2e` | Write or fix e2e specs, or explore UI |
 | | `run-e2e` | Run e2e tests or open the e2e UI |
-| `reviewer` | `review` | Review a diff or branch |
+| `reviewer`, `senior-reviewer` | `review` | Review a diff or branch |
+
+Assign the role's default agent; a variant needs the user's approval first, per [agents.md](references/agents.md).
 
 ## Ticket flow
 
-- When `think` or `plan` needs facts from outside the repository, start `helper` with `research` in the background, and give its file to the planner.
 - `think`, then `plan` after the user says to plan. Relay each planner question, the commit format included, per [reuse.md](references/reuse.md). Stop for plan approval.
 - `develop` runs the approved plan itself, step by step: specs and code, a focused unit run, code fixes, then the step's commit. It returns only when the plan is done or at a stop condition in [step-execution.md](../develop/references/step-execution.md); ask the user then.
 - When final validation or the review still fails after the fixes, stop and ask the user.
