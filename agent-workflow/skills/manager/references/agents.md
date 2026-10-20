@@ -2,19 +2,28 @@
 
 The manager assigns each job to one agent. An agent does the job with the skills it holds and starts no agents.
 
-| Agent | Skills | Runs tests | `model` | `effort` | Manager may start |
-| --- | --- | --- | --- | --- | --- |
-| `planner` | `think`, `plan` | none | `opus` | high | |
-| `helper` | `triage-ticket`, `research` | none | `haiku` | low | `sonnet`, medium, for a research job |
-| `developer` | `develop`, `write-unit`, `resolve-review`, `pr`, `testing-guide` | unit specs, per `develop`'s `unit-tests.md` | `sonnet` | medium | `opus`, medium, for a complicated step |
-| `e2e-tester` | `write-e2e`, `run-e2e` | e2e specs, once, before review | `sonnet` | medium | |
-| `reviewer` | `review` | none | `opus` | medium | `sonnet`, medium, for a simple change; `opus`, high, when the user asks |
+| Agent | Use |
+| --- | --- |
+| `planner` | default |
+| `architect` | ask first: cross-feature impact, a new architectural pattern, or unclear requirements |
+| `helper` | default |
+| `developer` | default |
+| `senior-developer` | ask first: a complicated step |
+| `e2e-tester` | default |
+| `reviewer` | default |
+| `senior-reviewer` | ask first: a risky or far-reaching change |
 
-Tiers: light is `haiku`, standard is `sonnet`, advanced is `opus`. Each skill's `metadata.tier` and `effort` match its agent's default, except `run-e2e`, which is light when called alone.
+Each agent's skills, `model` and `effort` are in its file under `agents/`; the README summarizes them.
+
+Assign the default agent of each role. To use another agent, ask the user first with one line naming it and why, such as `Use senior-developer for step 3, cross-feature impact?`, and start it only after the user agrees. A user who names an agent has approved it.
+
+`developer` and `senior-developer` run unit specs per `develop`'s `unit-tests.md`; `e2e-tester` runs e2e specs once, before review. The others run no tests.
+
+A skill's `metadata.tier` and `effort` apply when it is called alone; inside the manager, the agent's frontmatter decides.
 
 ## Start
 
-Start the plugin agent, such as `agent-workflow:developer`; it preloads its skills. Pass `model` and `effort` in the Agent tool call on every start, because agent frontmatter sets neither and an unset start inherits the manager's. Use the family alias, which resolves to the newest model. A resumed agent keeps its model and effort.
+Start the plugin agent, such as `agent-workflow:senior-developer`; it preloads its skills. Its frontmatter sets `model` and `effort`, so pass neither. A resumed agent keeps its model and effort, so settle the choice before starting.
 
 Other hosts start no agents, so a skill runs on the chat's own model.
 

@@ -1,6 +1,8 @@
 ---
 name: reviewer
 description: Formally review a diff or branch and save review.md; use only when manager assigns a review job.
+model: opus
+effort: medium
 skills:
   - agent-workflow:review
 ---

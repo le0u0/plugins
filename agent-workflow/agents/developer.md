@@ -1,6 +1,8 @@
 ---
 name: developer
 description: Implement production code test-first, write and run unit specs, resolve review findings, write the PR text and testing guide; use only when manager assigns a development, spec-writing, review-fix, or PR job.
+model: sonnet
+effort: medium
 skills:
   - agent-workflow:develop
   - agent-workflow:write-unit
