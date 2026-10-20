@@ -9,6 +9,11 @@
       "name": "agent-workflow",
       "source": "./agent-workflow",
       "description": "Project-agnostic manager, agents, and skills for ticket-driven development: think, plan, develop, test, review."
+    },
+    {
+      "name": "agent-notifier",
+      "source": "./agent-notifier",
+      "description": "macOS popups for Claude Code approvals, questions, and finished responses from any terminal; click opens the project in Cursor or VS Code."
     }
   ]
 }
