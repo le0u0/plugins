@@ -23,7 +23,14 @@ Restart Claude Code first. Init builds the popup, asks for the editor, duration 
 | `init` | Set up, diagnose, migrate from standalone hooks. |
 | `duration` | Seconds a popup stays visible (default 5). |
 | `sound` | Pick a macOS sound with preview, or silence. |
+| `uninstall` | Remove the helper and saved preferences before deleting the plugin. |
 
 Preferences are saved in `~/.claude/agent-notifier.json` (or under `CLAUDE_CONFIG_DIR`) and survive updates. `AGENT_NOTIFIER_SOUND` overrides the sound; `AGENT_NOTIFIER_PATH` points to a custom popup helper.
+
+Already deleted the plugin? Remove what is left by hand:
+
+```bash
+rm -rf ~/Library/Application\ Support/AgentNotifierIcon ~/.claude/agent-notifier.json
+```
 
 After an update, run `/agent-notifier:init` to rebuild the popup.
