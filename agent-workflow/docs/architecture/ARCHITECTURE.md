@@ -9,16 +9,16 @@ flowchart TD
     U([User]) <--> M[manager<br/>main thread]
     M -->|think, plan job| P[planner]
     M -->|ticket triage| H[helper]
-    M -->|develop, write specs, review fix| D[developer]
+    M -->|develop, unit specs, review fix, PR text and testing guide| D[developer]
     M -->|run unit tests| U[unit-tester]
-    M -->|run e2e tests| E[e2e-tester]
+    M -->|write and run e2e tests| E[e2e-tester]
     M -->|review job| R[reviewer]
 
     P --- P1[think] & P3[plan]
     H --- H1[triage-ticket]
-    D --- D1[develop] & D2[write-unit] & D5[write-e2e] & D4[resolve-review]
+    D --- D1[develop] & D2[write-unit] & D4[resolve-review] & D6[pr] & D7[testing-guide]
     U --- U1[run-unit]
-    E --- E2[run-e2e]
+    E --- E1[write-e2e] & E2[run-e2e]
     R --- R1[review]
 ```
 
@@ -28,12 +28,14 @@ flowchart TD
 flowchart LR
     T[Ticket] --> TH[think<br/>questions batch]
     TH -->|answers via manager| TH
-    TH -->|user says plan| PL[plan]
-    PL -->|user approves plan| S[develop<br/>one step]
-    S -->|user approves step| S
+    TH -->|user says plan| PL[plan<br/>asks commit format]
+    PL -->|user approves plan| S[develop<br/>step, test, commit]
+    S -->|next step, no approval| S
+    S -->|stuck: ask user| U2([User])
     S -->|last step| RV[review]
     RV -->|selected findings| RS[resolve-review]
     RS -->|re-review| RV
+    RV -->|approved| PR[pr + testing-guide]
 ```
 
 ## Manager loop
@@ -54,10 +56,13 @@ flowchart TD
 
 ## Why this structure
 
-- **Fewer agents, fewer re-reads.** Each new agent re-reads rules, plan, and diff. Earlier, one plan step started about four agents: developer, spec writer, and two runners. Now one `developer` writes the specs and code for a step, and `unit-tester` and `e2e-tester` do the runs.
+- **Fewer agents, fewer re-reads.** Each new agent re-reads rules, plan, and diff. Earlier, one plan step started about four agents: developer, spec writer, and two runners. Now one `developer` writes the unit specs and code for a step, `unit-tester` runs them, and `e2e-tester` writes and runs the e2e specs.
 - **One developer per tier per ticket.** A plan step goes to the ticket's existing `developer` of the step's tier (standard by default, advanced for a complicated step), so a 12-step ticket starts at most two developers, not twelve. `checklist.md` carries progress between steps. Trade-off: a developer's context grows over the ticket. Within a ticket, agents stay alive and get later work by SendMessage to the same ID, so a re-test or re-review does not re-read the rules, plan, and diff. Finished agents cost nothing while idle. The manager records each ID in `jobs.md`; if an agent is gone, it starts a fresh one that reads the plan, `checklist.md`, and `jobs.md`.
+- **Plan approval is the gate.** With per-step commits, approving the plan approves every step, its one-line commit message, and the file deletions it lists. `develop` implements and commits step after step without asking. It stops and asks only when a spec still fails after two fixes, a step needs something outside the plan, or the plan is unclear. It never loops on a failure.
+- **The test author runs the test.** `developer` writes unit specs, because they drive the code. `e2e-tester` writes and runs the e2e specs, so QA owns QA tests. Testers run only the specs the task changed and report other specs that may be affected.
+- **Plugin files live outside the repo.** Tasks, reviews, domain notes, the commit format, the PR text and the testing guide are all saved under `~/.agent-workflow/`, so any project can use them.
 - **Reviewer reuse.** The same `reviewer` re-reviews the ticket and updates `review.md` in place. Trade-off: a re-review carries its earlier findings, so it is less independent than a fresh read.
 - **Manager verifies, not trusts.** An agent's "done" is a claim. The manager checks the diff, artifacts, and test result itself before reporting.
-- **Short reports.** Agents report in at most eight lines; the manager announces a job in one line and reports it in at most three. Detail lives in `jobs.md` in the task folder.
+- **Short reports.** Agents report in at most eight lines; the manager announces a job in one line and reports it in at most three. Detail lives in `state/jobs.md` in the task folder.
 - **Model by agent and tier.** Skills are grouped by weight into light, standard and advanced. The manager passes `model` and `effort` on every start and may start a developer or reviewer at another tier for a complicated or simple job. See [models](models.md).
-- **Claude Code first.** Agents and hooks work only in Claude Code. Skills stay plain `SKILL.md` files, so other hosts run them directly on the chat's own model, with no subagents.
+- **Claude Code first.** Agents work only in Claude Code. Skills stay plain `SKILL.md` files, so other hosts run them directly on the chat's own model, with no subagents.

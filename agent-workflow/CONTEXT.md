@@ -24,7 +24,7 @@ Shared terms for this plugin.
 | Term | Meaning |
 | --- | --- |
 | Ticket | A task ID such as `PROJ-123`. Requirements come from supplied or retrieved context, never the key alone. |
-| Task folder | `~/.agent-workflow/tasks/{ticket}-{description}/`, with `plan.md`, `checklist.md`, `review.md`, and optional `investigation.md`. |
+| Task folder | `~/.agent-workflow/tasks/{ticket}/`, with `plan.md`, `checklist.md`, `review.md`, `pr.md`, and a testing guide. Plugin files live in its `state/` subfolder. |
 | Step | A reviewable milestone in an approved plan. Work stays uncommitted unless the user approves a commit. |
 | Test-driven slice | One behavior: one failing test through a public seam, then the minimum code to pass it. |
 | Temporary contract | A feature-local stand-in used until a real dependency exists, with a ticket-linked `FIXME` and removal condition. |

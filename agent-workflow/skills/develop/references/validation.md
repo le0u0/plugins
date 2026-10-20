@@ -5,5 +5,6 @@
 3. Report `Open: ready for review` with the initial baseline and the plan's test authorization. The manager sends the full approved scope to the task's `reviewer`, which saves `review.md` in the task folder.
 4. Report review findings apart from test results. Failed required checks or open requirements block a verified-complete claim; excluded checks are limits, never passes.
 5. Add discovered work to `checklist.md`; ask before expanding scope.
+6. When a required check or the review still fails after the fixes, stop and report it. Ask the user how to proceed; never loop.
 
 Finish with delivered behavior, review outcome, validation limits, uncommitted files or commit SHAs, and the review path.

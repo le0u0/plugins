@@ -7,6 +7,8 @@
 3. An evidenced Git parent, for a first review.
 4. Ask when uncertain.
 
+Before reviewing, confirm the baseline resolves and the diff is not empty; otherwise stop and say so.
+
 When a saved SHA is missing, invalid, or not an ancestor of `HEAD`, stop and ask. Never fall back to a larger range.
 
 ## Range

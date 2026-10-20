@@ -12,17 +12,17 @@ A manager that plans, builds, tests and reviews a ticket with specialist agents.
 /agent-workflow:manager on
 ```
 
-Describe the work. The manager assigns each job to an agent, checks the result, and reports in a few lines. `off` stops it. Every skill also works on its own.
+Describe the work. The manager assigns each job to an agent, checks the result, and reports in a few lines. Say `stop manager` to end it. Every skill also works on its own.
 
 ## Agents
 
 | Agent | Skills |
 | --- | --- |
 | `planner` | `think`, `plan` |
-| `developer` | `develop`, `write-unit`, `write-e2e`, `resolve-review` |
+| `developer` | `develop`, `write-unit`, `resolve-review`, `pr`, `testing-guide` |
 | `reviewer` | `review` |
 | `unit-tester` | `run-unit` |
-| `e2e-tester` | `run-e2e` |
+| `e2e-tester` | `write-e2e`, `run-e2e` |
 | `helper` | `triage-ticket` |
 
 Task docs are saved in `~/.agent-workflow/tasks/`. More in [architecture](docs/architecture/ARCHITECTURE.md).

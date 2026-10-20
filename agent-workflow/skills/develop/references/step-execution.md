@@ -8,9 +8,17 @@
 
 ## Step gate
 
-Run workflow step 3 of `SKILL.md` for the whole step: specs written to fail, code, passing specs. The test runs are tester jobs the manager assigns. Then stop at one approval gate and show the specs, the diff, and the passing output. When assigned by the manager, return to it and end.
+Run workflow step 3 of `SKILL.md` for the whole step: specs written to fail, code, passing specs. The test runs are tester jobs the manager assigns.
 
-Plan approval never approves a step. Skip the gate only when the user pre-approved it, such as "all steps are approved". After approval, mark the step done in `checklist.md` and start the next.
+With `Delivery` per-step commits, approving the plan approves every step, its commit, and the file deletions the plan lists. Mark the step done in `checklist.md`, commit per the commit gate, and start the next step without asking. Stop and ask the user only when:
+
+- the same spec still fails after two fixes;
+- a step needs a change outside the plan, or a file deletion the plan does not list;
+- the plan is unclear.
+
+Never loop on a failure: report it and discuss.
+
+With `Delivery` uncommitted, stop at one approval gate per step and show the specs, the diff, and the passing output. Plan approval never approves a step then, unless the user pre-approved it, such as "all steps are approved".
 
 When test runs are excluded, skip them and say so at the gate. A failing run never expands scope to bootstrap, configuration, or unrelated specs.
 
@@ -22,6 +30,6 @@ Format each changed file with the project's file-scoped command. When the staged
 
 Record changed files, evidence, and next action in `checklist.md`. At the gate, print its `## Implementation` section with the current item marked.
 
-## Optional commit gate
+## Commit gate
 
-Only when commits are requested. After the work and authorized checks, show the scope and exact message, the project's commit format, else `[TICKET] <type>: <description>`, and get approval unless already given for this diff. Stage only approved files or hunks; stop if unrelated staged changes would enter. Present again if staged-file checks change the diff materially. Record the SHA. Never push.
+Applies when `Delivery` is per-step commits, or the user asks. Commit each finished step with its plan `Commit` message, exactly, as one line with no body or trailer. No other approval is needed. When the step's scope changed, propose a new one-line message and get approval first. Without a plan message, use the project's commit format, else `<type>: <description>`. Stage only the step's files or hunks; stop if unrelated staged changes would enter. Record the SHA. Never push.

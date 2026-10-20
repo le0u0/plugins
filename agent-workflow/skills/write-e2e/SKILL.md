@@ -14,7 +14,7 @@ Follow [dispatch](../manager/references/dispatch.md). Production changes, includ
 2. Read one branch:
    - Author a spec or its data: [exploration.md](references/exploration.md) first, then [authoring.md](references/authoring.md).
    - Explore UI or discover locators: [exploration.md](references/exploration.md).
-3. Do only the requested work.
+3. Do only the requested work. When you change a shared helper, selector, or test data, search for other specs that use it and list them in your report under `Affected`.
 4. Check by reading: each requested behavior has an observable assertion, stable locator, deterministic wait, and repository-owned test data.
 
-Never run specs, even after a fix; `e2e-tester` runs them, so a result comes from one place. Format only changed files. Formal review goes to `review`.
+Never run specs in this skill, even after a fix; run them only per `run-e2e`, when authorized. Format only changed files. Formal review goes to `review`.

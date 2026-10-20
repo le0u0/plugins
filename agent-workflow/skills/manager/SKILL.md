@@ -1,6 +1,6 @@
 ---
 name: manager
-description: 'Project manager for software work. Assigns jobs to agents, verifies their results, and reports briefly. Add `on` or `off` to switch manager mode for the session.'
+description: 'Project manager for software work. Assigns jobs to agents, verifies their results, and reports briefly. Invoking it turns manager mode on for the rest of the session; say `stop manager` to end it.'
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Manager mode
 
-`on` treats every later request in the session as a manager job; answer unrelated questions directly. `off` returns to normal handling. For `on` or `off` alone, confirm in one line and stop. In Claude Code, the plugin's `UserPromptSubmit` hook repeats the reminder each prompt.
+Invoking this skill, with or without arguments, turns manager mode on for the rest of the session. Treat every later request as a manager job, and answer unrelated questions directly. `stop manager` returns the session to normal handling. Invoked alone, confirm in one line and stop.
 
 ## Role
 
@@ -23,20 +23,23 @@ Own decisions, scope, order, user communication, and acceptance. Assign every jo
 | `helper` | `triage-ticket` | Ticket requirements or queue triage |
 | `developer` | `develop` | Implement a plan step or production change, or diagnose a test failure |
 | | `write-unit` | Write or fix unit specs |
-| | `write-e2e` | Write or fix e2e specs, or explore UI |
 | | `resolve-review` | Fix or disposition findings in a saved review |
+| | `pr` | Write the PR title and body |
+| | `testing-guide` | Write the manual testing guide |
 | `unit-tester` | `run-unit` | Run unit tests |
-| `e2e-tester` | `run-e2e` | Run e2e tests or open the e2e UI |
+| `e2e-tester` | `write-e2e` | Write or fix e2e specs, or explore UI |
+| | `run-e2e` | Run e2e tests or open the e2e UI |
 | `reviewer` | `review` | Review a diff or branch |
 
 ## Ticket flow
 
 - `think`, then `plan` after the user says to plan. Stop for plan approval.
-- Then `develop` runs one step at a time, with one approval per step.
+- Then `develop` runs the steps in order. With per-step commits, plan approval covers every step and commit; the user is asked only on the stop conditions in [step-execution.md](../develop/references/step-execution.md).
 - `develop` returns `Open: run the specs`: assign unit specs to `unit-tester` and e2e specs to `e2e-tester`. Send a failure, with the failed specs and the failure log path, to the same `developer`.
-- When the same spec still fails after two fixes, stop and ask the user.
+- When the same spec still fails after two fixes, or final validation or the review still fails after the fixes, stop and ask the user. Never loop.
 - `develop` returns `Open: ready for review`: send the baseline and scope to `reviewer`.
 - A saved review approves no fixes. Resolve the user's selected findings first.
+- When the review is approved and the ticket is done, assign `developer` `pr` and `testing-guide` together. Show the PR title and both paths. The user opens the PR.
 
 ## Tests
 
@@ -67,6 +70,7 @@ Agents stay alive for the ticket. Record each agent's ID and tier from its start
 
 - `planner`: think, then plan, then the user's answers.
 - `developer`: every later plan step of the same tier, follow-ups, gaps you found, review fixes. A failure goes to the developer that did the step.
+- `e2e-tester`: writing and rerunning e2e specs.
 - `unit-tester`, `e2e-tester`: re-running the failed and changed specs after a developer changes the test or code.
 - `reviewer`: re-review of the same branch, which updates `review.md` in place.
 
@@ -81,7 +85,7 @@ When SendMessage to a recorded ID fails, start a fresh agent and point it at the
 1. Resolve the repository, branch, objective, requirement source, task folder per [dispatch](references/dispatch.md) (section "Task folder"), review path, and next authorized job. Ask only when ambiguity blocks a safe assignment.
 2. Write one checkable acceptance criterion per requested outcome, then assign it per [dispatch](references/dispatch.md) (section "Handoff").
 3. Verify each criterion yourself; never accept the agent's word. Check `git diff --stat`, the changed hunks for the criteria, that named artifacts exist, and that each reported test command selects the right scope and has an exit code. Rerun a unit test only when its evidence is missing or contradicts the diff, and only when tests were authorized; ask before rerunning e2e tests or any reset. Send gaps back to the same agent.
-4. With a task folder, append the job to `jobs.md` there per the [written docs](references/dispatch.md) (section "Written docs") rules, at most six lines per job:
+4. With a task folder, append the job to `state/jobs.md` there per the [written docs](references/dispatch.md) (section "Written docs") rules, at most six lines per job:
 
    ```markdown
    ### 3. Step 2 spec — developer — done
@@ -96,7 +100,8 @@ When SendMessage to a recorded ID fails, start a fresh agent and point it at the
 ## Report
 
 - On assigning, say one line only: `→ <agent>: <job>`. Never preview what the agent will do.
-- After a job, at most three lines: `<job>: done | failed | blocked. <the one thing that matters>.`, then what needs the user, then the `jobs.md` link when it exists. At an approval gate, end with one question, such as `Approve step 2?`; show a commit message only when commits were requested.
+- After a job, at most three lines: `<job>: done | failed | blocked. <the one thing that matters>.`, then what needs the user, then the path of the doc the user should read, if any. At an approval gate, end with one question, such as `Approve step 2?`; show a commit message only when commits were requested.
 - Observations outside the job, such as the same issue in other files, go to `jobs.md`, not chat.
 - During an open discussion, put the job line first, then `Back to: <open topic>` and continue the discussion. Hold questions the result raises until the current point closes; raise a failure or blocker at once only when it changes the current point.
+- Name only the files the user reads: `plan.md`, `checklist.md`, `review.md`, `pr.md`, and the testing guide. Give each by its full absolute path, one per line. Never name `state/` files.
 - No tables, no evidence dumps, no restated plan in chat.
