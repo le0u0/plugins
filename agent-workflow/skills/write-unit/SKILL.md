@@ -1,6 +1,6 @@
 ---
 name: write-unit
-description: 'Write or fix unit specs for changed code, following the project''s test rules, without running them. Use for "add unit tests", "fix this spec", or when manager assigns it.'
+description: 'Write or fix unit specs for changed code, following the project''s test rules, without running them. Use for "add unit tests" or "fix this spec".'
 effort: medium
 metadata:
   tier: standard
@@ -8,11 +8,11 @@ metadata:
 
 # Write Unit
 
-Follow [dispatch](../manager/references/dispatch.md). Production fixes go to `develop`; test runs go to `run-unit`.
+Report per [reports.md](../manager/references/reports.md). Production fixes go to `develop`; test runs go to `run-unit`.
 
 ## Workflow
 
-1. Read the [project references](../manager/references/dispatch.md) (section "Project references") for testing: unit-testing rules, project-local testing skills, the test framework's config, and the nearest comparable spec. Follow their conventions for mocking, setup, and file placement. Then read [test-quality.md](references/test-quality.md).
+1. Read the [project references](../manager/references/project-references.md) for testing: unit-testing rules, project-local testing skills, the test framework's config, and the nearest comparable spec. Follow their conventions for mocking, setup, and file placement. Then read [test-quality.md](references/test-quality.md).
 
 2. List each changed behavior from the diff or named files; cover only those unless asked. Read the target and its nearest comparable spec.
 
@@ -35,4 +35,4 @@ Follow [dispatch](../manager/references/dispatch.md). Production fixes go to `de
 
 4. Self-check by reading: setup reaches the intended state, and assertions would fail on the regression. Report production defects found. Hand back without running tests.
 
-Leave the [protected files](../run-unit/references/running.md) (section "Protected files") and unrelated specs unchanged. `review` owns formal review.
+Leave the protected files listed in [running.md](../run-unit/references/running.md) and unrelated specs unchanged. `review` owns formal review.

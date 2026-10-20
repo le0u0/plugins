@@ -11,7 +11,7 @@ Take the command, project, arguments, and auth state from `package.json` and the
 
 Run only the specs the task changed: the plan's spec files and any spec you wrote or fixed. Never run the full suite or a whole folder unless the user asks. When a changed helper, selector, or test data is used by other specs, find them by search and report them under `Affected`; do not run them.
 
-Select tests by file arguments and name filters. A run-only request changes no source, configuration, scripts, or specs; add no `.only` and disable no tests. Run without a pipe and report the real exit code; when it can't be captured, report it as unknown, never as 0. Report per the [test report](../../manager/references/dispatch.md) (section "Test report"): counts on success, the failed tests and a failed-only log on failure. Check wrapper scripts for file writes before running them, and compare the worktree before and after, even on failure. When selection is blocked, report it as `blocked` with the next step; never change the harness or broaden the suite without authorization.
+Select tests by file arguments and name filters. A run-only request changes no source, configuration, scripts, or specs; add no `.only` and disable no tests. Run without a pipe and report the real exit code; when it can't be captured, report it as unknown, never as 0. Report per the [test report](../../manager/references/reports.md): counts on success, the failed tests and a failed-only log on failure. Check wrapper scripts for file writes before running them, and compare the worktree before and after, even on failure. When selection is blocked, report it as `blocked` with the next step; never change the harness or broaden the suite without authorization.
 
 ## Debugging
 
