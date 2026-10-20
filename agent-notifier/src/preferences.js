@@ -170,4 +170,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { preferences, savedPreferences, savePreference, durationSeconds, soundName, soundFiles };
+module.exports = { configPath, preferences, savedPreferences, savePreference, durationSeconds, soundName, soundFiles };

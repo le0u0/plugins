@@ -71,3 +71,25 @@ test("editor choice persists and controls notification click command", () => {
     fs.rmSync(directory, { recursive: true });
   }
 });
+
+test("uninstall removes the popup helper and saved preferences only", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "notifier-uninstall-"));
+  try {
+    const helper = path.join(home, "Library/Application Support/AgentNotifierIcon");
+    const config = path.join(home, ".claude");
+    fs.mkdirSync(helper, { recursive: true });
+    fs.mkdirSync(config);
+    fs.writeFileSync(path.join(helper, "marker"), "");
+    fs.writeFileSync(path.join(config, "agent-notifier.json"), "{}");
+    fs.writeFileSync(path.join(config, "settings.json"), "{}");
+    const run = () => spawnSync(process.execPath, [init, "--uninstall"], {
+      encoding: "utf8", env: { ...process.env, HOME: home, CLAUDE_CONFIG_DIR: config }
+    });
+    assert.equal(run().status, 0);
+    assert.equal(fs.existsSync(helper), false);
+    assert.deepEqual(fs.readdirSync(config), ["settings.json"]);
+    assert.equal(run().status, 0);
+  } finally {
+    fs.rmSync(home, { recursive: true });
+  }
+});

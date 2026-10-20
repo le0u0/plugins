@@ -7,6 +7,7 @@ const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 const { saveEditor } = require("./editor");
 const { notifierPath, notify } = require("./notifier");
+const { configPath } = require("./preferences");
 const { removeManaged, uninstallHooks } = require("./settings");
 
 const mode = process.argv[2] || "--check";
@@ -60,7 +61,14 @@ if (mode === "--icon") {
       process.stdout.write("No standalone hooks to migrate.\n");
     }
   }
+} else if (mode === "--uninstall") {
+  const helperDirectory = path.join(os.homedir(), "Library/Application Support/AgentNotifierIcon");
+  for (const target of [helperDirectory, configPath()]) {
+    const found = fs.existsSync(target);
+    fs.rmSync(target, { recursive: true, force: true });
+    process.stdout.write(`${found ? "Removed" : "Not found"}: ${target}\n`);
+  }
 } else {
-  process.stderr.write("Usage: init.js [--check|--test|--migrate|--icon|--editor cursor|vscode]\n");
+  process.stderr.write("Usage: init.js [--check|--test|--migrate|--icon|--uninstall|--editor cursor|vscode]\n");
   process.exitCode = 1;
 }
