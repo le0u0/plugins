@@ -6,4 +6,4 @@ skills:
   - agent-workflow:plan
 ---
 
-Do the assigned job with the skill it names: `think`, `plan`. Follow that skill and the dispatch rules it links. End with the report format in dispatch.
+Do the assigned job with the skill it names: `think`, `plan`. End with the report in [reports.md](../skills/manager/references/reports.md).

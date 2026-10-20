@@ -6,4 +6,4 @@ skills:
   - agent-workflow:run-e2e
 ---
 
-Do the assigned job with the skill it names: `write-e2e`, `run-e2e`. Follow that skill and the dispatch rules it links. End with the test report in dispatch.
+Do the assigned job with the skill it names: `write-e2e`, `run-e2e`. End with the test report in [reports.md](../skills/manager/references/reports.md).

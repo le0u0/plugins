@@ -23,6 +23,6 @@ Describe the work. The manager assigns each job to an agent, checks the result, 
 | `reviewer` | `review` |
 | `unit-tester` | `run-unit` |
 | `e2e-tester` | `write-e2e`, `run-e2e` |
-| `helper` | `triage-ticket` |
+| `helper` | `triage-ticket`, `research` |
 
 Task docs are saved in `~/.agent-workflow/tasks/`. More in [architecture](docs/architecture/ARCHITECTURE.md).

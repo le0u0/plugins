@@ -15,7 +15,7 @@ flowchart TD
     M -->|review job| R[reviewer]
 
     P --- P1[think] & P3[plan]
-    H --- H1[triage-ticket]
+    H --- H1[triage-ticket] & H2[research]
     D --- D1[develop] & D2[write-unit] & D4[resolve-review] & D6[pr] & D7[testing-guide]
     U --- U1[run-unit]
     E --- E1[write-e2e] & E2[run-e2e]
@@ -64,5 +64,5 @@ flowchart TD
 - **Reviewer reuse.** The same `reviewer` re-reviews the ticket and updates `review.md` in place. Trade-off: a re-review carries its earlier findings, so it is less independent than a fresh read.
 - **Manager verifies, not trusts.** An agent's "done" is a claim. The manager checks the diff, artifacts, and test result itself before reporting.
 - **Short reports.** Agents report in at most eight lines; the manager announces a job in one line and reports it in at most three. Detail lives in `state/jobs.md` in the task folder.
-- **Model by agent and tier.** Skills are grouped by weight into light, standard and advanced. The manager passes `model` and `effort` on every start and may start a developer or reviewer at another tier for a complicated or simple job. See [models](models.md).
+- **Model by agent and tier.** Skills are grouped by weight into light, standard and advanced. The manager passes `model` and `effort` on every start and may start a developer or reviewer at another tier for a complicated or simple job. See [agents.md](../../skills/manager/references/agents.md).
 - **Claude Code first.** Agents work only in Claude Code. Skills stay plain `SKILL.md` files, so other hosts run them directly on the chat's own model, with no subagents.

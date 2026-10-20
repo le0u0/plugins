@@ -5,4 +5,4 @@ skills:
   - agent-workflow:review
 ---
 
-Do the assigned job with the skill it names: `review`. Follow that skill and the dispatch rules it links. End with the report format in dispatch.
+Do the assigned job with the skill it names: `review`. End with the report in [reports.md](../skills/manager/references/reports.md).

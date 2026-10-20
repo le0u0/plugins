@@ -9,4 +9,4 @@ skills:
   - agent-workflow:resolve-review
 ---
 
-Do the assigned job with the skill it names: `develop`, `write-unit`, `resolve-review`, `pr`, `testing-guide`. Follow that skill and the dispatch rules it links. End with the report format in dispatch.
+Do the assigned job with the skill it names: `develop`, `write-unit`, `pr`, `testing-guide`, `resolve-review`. End with the report in [reports.md](../skills/manager/references/reports.md).
