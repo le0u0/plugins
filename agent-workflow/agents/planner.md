@@ -1,6 +1,8 @@
 ---
 name: planner
 description: Think through and plan one ticket with the user; use only when manager assigns a thinking or planning job.
+model: opus
+effort: medium
 skills:
   - agent-workflow:think
   - agent-workflow:plan
