@@ -10,7 +10,7 @@ metadata:
 
 Report per [reports.md](../manager/references/reports.md). Production changes, including missing test selectors, go to `develop`; test runs go to `run-e2e`.
 
-1. Read the [project references](../manager/references/project-references.md) for e2e: rules, project-local e2e skills, the runner config, and the closest spec. Resolve the auth state, test data, helpers, and base URL they use.
+1. Find the e2e test setup per [test-setup.md](../manager/references/test-setup.md); with none, write no specs and say so. Read the [project references](../manager/references/project-references.md) for e2e: rules, project-local e2e skills, the runner config, and the closest spec. Resolve the auth state, test data, helpers, and base URL they use.
 2. Read one branch:
    - Author a spec or its data: [exploration.md](references/exploration.md) first, then [authoring.md](references/authoring.md).
    - Explore UI or discover locators: [exploration.md](references/exploration.md).

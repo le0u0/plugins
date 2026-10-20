@@ -35,6 +35,7 @@ Hide Export button when feature flag off.
 ## Testing
 
 - Seam: toolbar actions. Prior art: `layout.test`.
+- E2E: `playwright/tests/toolbar.spec.ts`: export button hidden when flag off.
 
 ## Decisions
 
@@ -55,8 +56,8 @@ None.
 
 - **Goal:** one or two lines.
 - **Acceptance criteria:** observable results, one line each, key error and edge cases included.
-- **Steps:** short numbered milestones, each one vertical slice: a thin path through the seams that works on its own. Each has `Do`, `Test`, `Commit`, `Blocked by`, and `Files` in one line each. `Blocked by` lists the earlier steps this one needs, or `none`; a step is ready when all of them are done. `Commit` is the step's one-line message in the confirmed commit format, with no body. Mark any file the step deletes `delete` in `Files`; approving the plan approves those deletions, and any other deletion needs the user's approval. `Test` names one behavior through a public seam, one failing test first, and whether tests may run. Put test seams, temporary contracts, access-right changes, and precedents in `Do` or `Files`, only when the developer needs them.
-- **Testing:** the seams under test, highest first and as few as possible, ideally one; prefer existing seams. Name prior art: a similar existing spec.
+- **Steps:** short numbered milestones, each one vertical slice: a thin path through the seams that works on its own. Each has `Do`, `Test`, `Commit`, `Blocked by`, and `Files` in one line each. `Blocked by` lists the earlier steps this one needs, or `none`; a step is ready when all of them are done. `Commit` is the step's one-line message in the confirmed commit format, with no body. Mark any file the step deletes `delete` in `Files`; approving the plan approves those deletions, and any other deletion needs the user's approval. `Test` names one behavior through a public seam, or `none: no setup`, one failing test first, and whether tests may run. Put test seams, temporary contracts, access-right changes, and precedents in `Do` or `Files`, only when the developer needs them.
+- **Testing:** the seams under test, highest first and as few as possible, ideally one; prefer existing seams. Name prior art: a similar existing spec. `E2E:` names the exact e2e spec files to write or change and the scenario, or `none`; e2e runs once, after the last step, and this line is its only scope.
 - **Decisions:** only choices that change scope or design, one line each. Link `diagnose.md` when it drove one.
 - **Out of scope:** work the plan excludes, one line each, or `None.`.
 - **Open:** blocking questions only, or `None.`.

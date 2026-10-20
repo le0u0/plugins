@@ -9,9 +9,11 @@ Take the command, project, arguments, and auth state from `package.json` and the
 
 ## Test selection
 
-Run only the specs the task changed: the plan's spec files and any spec you wrote or fixed. Never run the full suite or a whole folder unless the user asks. When a changed helper, selector, or test data is used by other specs, find them by search and report them under `Affected`; do not run them.
+Run exactly the spec files the manager's handoff names, taken from the `E2E` line in the plan's Testing section, by file argument and name filter. When the runner cannot select by file, report `blocked` with the limit. A folder, a tag, or the full suite runs only when the user asks. Reuse no earlier or cached result; report this run's.
 
-Select tests by file arguments and name filters. A run-only request changes no source, configuration, scripts, or specs; add no `.only` and disable no tests. Run without a pipe and report the real exit code; when it can't be captured, report it as unknown, never as 0. Report per the [test report](../../manager/references/reports.md): counts on success, the failed tests and a failed-only log on failure. Check wrapper scripts for file writes before running them, and compare the worktree before and after, even on failure. When selection is blocked, report it as `blocked` with the next step; never change the harness or broaden the suite without authorization.
+A run-only request changes no source, configuration, scripts, or specs, adds no `.only`, and disables no tests. Run without a pipe and report the real exit code; when it can't be captured, report it as unknown. Report per [reports.md](../../manager/references/reports.md). Check wrapper scripts for file writes before running them, and compare the worktree before and after, even on failure.
+
+When a changed helper, selector, or test data is used by other specs, find them by search and report them under `Affected`, unrun.
 
 ## Debugging
 

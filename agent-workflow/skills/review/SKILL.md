@@ -26,7 +26,7 @@ When `review.md` exists for this repository and branch, update it in place:
 
 ## 3. Review pass
 
-Review the code only; the manager runs the tests in parallel and writes their results into `Tests`. Leave `Tests` as not run on a first pass; the testers run every test. On a re-review, read the tester results the manager wrote in `review.md`; for each reported failure, check by reading code that the developer's fix addresses it.
+Review the code only; the manager writes the test results into `Tests`. Leave `Tests` as not run on a first pass; you run no tests. On a re-review, read the tester results the manager wrote in `review.md`; for each reported failure, check by reading code that the developer's fix addresses it.
 
 Do the review pass:
 
@@ -49,5 +49,5 @@ On a re-review, a reported test failure in `Tests` that the fix does not address
 
 - Pick the files worth a human read for `Manual review`, per [report-format.md](references/report-format.md).
 - Write `review.md` in that format directly at the report path.
-- Reply with the issue count, one line per open finding (severity, file and line, issue, fix), resolved numbers, and the `review.md` link. Say "No actionable findings" only after reading every hunk.
+- End with the standard report: `Artifacts` names `review.md`, `Open` gives the issue count by severity, and `Changed` is `none`. The findings live in `review.md`. Say "No actionable findings" only after reading every hunk.
 - Suggest no follow-up skill.

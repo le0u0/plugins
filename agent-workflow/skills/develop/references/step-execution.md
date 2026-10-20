@@ -8,9 +8,9 @@
 
 ## Step gate
 
-Run workflow step 3 of `SKILL.md` for the whole step: specs written to fail, code, passing specs. The test runs are tester jobs the manager assigns.
+Run workflow step 3 of `SKILL.md` for the whole step: specs written to fail, code, passing specs. You run the step's focused unit specs yourself, per [unit-tests.md](unit-tests.md).
 
-With `Delivery` per-step commits, approving the plan approves every step, its commit, and the file deletions the plan lists. Mark the step done in `checklist.md`, commit per the commit gate, and start the next step without asking. Stop and ask the user only when:
+With `Delivery` per-step commits, approving the plan approves every step, its commit, and the file deletions the plan lists. When the step's unit specs pass, mark the step done in `checklist.md`, commit per the commit gate, and start the next step without asking. Stop and ask the user only when:
 
 - the same spec still fails after two fixes;
 - a step needs a change outside the plan, or a file deletion the plan does not list;

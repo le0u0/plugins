@@ -24,12 +24,11 @@ Routing authorizes nothing by itself. Tests, resets, commits, pushes, external w
 | | `plan` | Plan a ticket |
 | `helper` | `triage-ticket` | Ticket requirements or queue triage |
 | | `research` | Answer a question from primary sources |
-| `developer` | `develop` | Implement a plan step or production change, or diagnose a test failure |
+| `developer` | `develop` | Implement the plan, run unit specs, commit each step, or diagnose a failure |
 | | `write-unit` | Write or fix unit specs |
 | | `resolve-review` | Fix or disposition findings in a saved review |
 | | `pr` | Write the PR title and body |
 | | `testing-guide` | Write the manual testing guide |
-| `unit-tester` | `run-unit` | Run unit tests |
 | `e2e-tester` | `write-e2e` | Write or fix e2e specs, or explore UI |
 | | `run-e2e` | Run e2e tests or open the e2e UI |
 | `reviewer` | `review` | Review a diff or branch |
@@ -37,11 +36,11 @@ Routing authorizes nothing by itself. Tests, resets, commits, pushes, external w
 ## Ticket flow
 
 - When `think` or `plan` needs facts from outside the repository, start `helper` with `research` in the background, and give its file to the planner.
-- `think`, then `plan` after the user says to plan. Relay the questions per [reuse.md](references/reuse.md). Stop for plan approval.
-- `develop` runs the steps in order. With per-step commits, plan approval covers every step and commit; ask the user only on the stop conditions in [step-execution.md](../develop/references/step-execution.md).
-- `develop` returns `Open: run the specs`: assign unit specs to `unit-tester` and e2e specs to `e2e-tester`, per [tests.md](references/tests.md). Send a failure, with the failed specs and the failure log path, to the same `developer`.
-- When the same spec still fails after two fixes, or final validation or the review still fails after the fixes, stop and ask the user.
-- `develop` returns `Open: ready for review`: send the baseline and scope to `reviewer`.
+- `think`, then `plan` after the user says to plan. Relay each planner question, the commit format included, per [reuse.md](references/reuse.md). Stop for plan approval.
+- `develop` runs the approved plan itself, step by step: specs and code, a focused unit run, code fixes, then the step's commit. It returns only when the plan is done or at a stop condition in [step-execution.md](../develop/references/step-execution.md); ask the user then.
+- When final validation or the review still fails after the fixes, stop and ask the user.
+- `develop` returns `Open: run e2e`: assign `e2e-tester` once to write and run exactly the specs the plan's `E2E` line names, per [tests.md](references/tests.md). Send a failure to the same `developer`.
+- `develop` returns `Open: ready for review`, or the e2e run passes: send the baseline and scope to `reviewer`.
 - Resolve the user's selected findings before anything else; a saved review approves no fixes.
 - When the review is approved and the ticket is done, assign `developer` `pr` and `testing-guide` together. Show the PR title and both paths. The user opens the PR.
 
