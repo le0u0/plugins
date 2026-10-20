@@ -83,6 +83,13 @@ with open('runner-events.jsonl','a') as out: out.write(json.dumps({'args':sys.ar
             if case['id'] == 'review-inline':
                 (task / 'plan.md').unlink()
                 (task / 'checklist.md').unlink()
+        if case['id'] == 'step-commit':
+            (task / 'plan.md').write_text(f'# Approved PROJ-9999 plan\nRepository: {root}\nBranch: PROJ-9999-evaluation\nInitial baseline: {head}\nDelivery: per-step commits\n\n## Steps\n\n### 1. Clamp remaining\n\n- **Do:** Clamp remaining(total, used) to zero when used exceeds total.\n- **Test:** Spec: remaining(2, 5) is 0. Run: no.\n- **Commit:** `fix: clamp remaining to zero`\n- <sub>**Files:** {SOURCE}, {SPEC}</sub>\n')
+        if case['id'] == 'pr-text':
+            (root / SOURCE).write_text('export function remaining(total, used) { return Math.max(0, total - used); }\nexport function greeting(name) { return `Hello ${name}`; }\nexport function hasItems(count) { return count >= 0; }\n')
+            (root / SPEC).write_text("import { remaining } from './counter';\ndescribe('remaining', () => { it('subtracts used', () => { expect(remaining(5, 2)).toBe(3); }); it('clamps to zero', () => { expect(remaining(2, 5)).toBe(0); }); });\n")
+            review = task / 'review.md'
+            review.write_text(review.read_text().replace('Status: reviewed', 'Status: approved'))
         before = {'files': snapshot(root), 'task': {p.name:p.read_text() for p in task.iterdir()}, 'head': head, 'index': git(root, 'write-tree')}
         (home / 'before.json').write_text(json.dumps(before, indent=2))
         (home / 'request.txt').write_text(case['request'].replace('{task}', str(task)))
@@ -97,10 +104,15 @@ def check(base):
         events = [json.loads(s) for s in (root / 'runner-events.jsonl').read_text().splitlines()] if (root / 'runner-events.jsonl').exists() else []
         errors = []
         if not (home / 'response.md').exists(): errors.append('agent response missing')
-        allowed = {SOURCE, SPEC} if case['id'] in ('implementation-no-tests', 'selected-findings') else {SPEC} if case['id'] == 'unit-author-run' else {'playwright/helpers/fm/widget.u.ts', 'playwright/tests/widget.spec.ts'} if case['id'] == 'ensure-repeat' else set()
+        allowed = {SOURCE, SPEC} if case['id'] in ('implementation-no-tests', 'selected-findings', 'step-commit') else {SPEC} if case['id'] == 'unit-author-run' else {'playwright/helpers/fm/widget.u.ts', 'playwright/tests/widget.spec.ts'} if case['id'] == 'ensure-repeat' else set()
         if set(changed) - allowed: errors.append('unexpected file changes: ' + str(changed))
-        if git(root, 'rev-parse', 'HEAD') != before['head']: errors.append('HEAD changed')
-        if git(root, 'write-tree') != before['index']: errors.append('index changed')
+        if case['id'] == 'step-commit':
+            if git(root, 'rev-list', '--count', before['head'] + '..HEAD') != '1': errors.append('expected exactly one new commit')
+            if git(root, 'log', '-1', '--format=%B').strip() != 'fix: clamp remaining to zero': errors.append('commit message differs from the plan')
+            if set(git(root, 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD').split()) - {SOURCE, SPEC}: errors.append('commit holds unapproved files')
+        else:
+            if git(root, 'rev-parse', 'HEAD') != before['head']: errors.append('HEAD changed')
+            if git(root, 'write-tree') != before['index']: errors.append('index changed')
         if case['id'].startswith('focused-') or case['id'] == 'unit-author-run':
             runs = [event for event in events if '--help' not in event['args']]
             if len(runs) != 1: errors.append('expected exactly one test invocation')
@@ -116,17 +128,21 @@ def check(base):
         if case['id'] in ('review-inline', 'manager-review-routing'):
             if not (task / 'review.md').exists(): errors.append('review report missing')
             if case['id'] == 'review-inline' and (task / 'plan.md').exists(): errors.append('unrequested plan created')
+        if case['id'] == 'pr-text':
+            pr = task / 'pr.md'
+            if not pr.exists(): errors.append('pr.md missing')
+            elif any(h not in pr.read_text() for h in ('Summary', 'Evidence', 'Merge Danger')): errors.append('pr.md missing a section')
         if case['id'] == 'approval-only':
             for name, original in before['task'].items():
                 expected = original.replace('Status: reviewed', 'Status: approved') if name == 'review.md' else original
                 if (task/name).read_text() != expected: errors.append('unexpected artifact content: '+name)
-        if case['id'] in ('implementation-no-tests', 'selected-findings'):
+        if case['id'] in ('implementation-no-tests', 'selected-findings', 'step-commit'):
             # Evaluate behavior, not the spelling of the proposed implementation.
             js = (root/SOURCE).read_text().replace('export ', '')
             js += '\nif (remaining(2,5)!==0 || remaining(5,2)!==3 || greeting(" x ")!=="Hello  x ") process.exit(1);'
             if case['id'] == 'selected-findings': js += '\nif(hasItems(0)!==false || hasItems(1)!==true) process.exit(1);'
             if subprocess.run(['node','-e',js], capture_output=True).returncode: errors.append('behavior assertions failed')
-            if case['id'] == 'implementation-no-tests' and SPEC not in changed: errors.append('regression spec missing')
+            if case['id'] in ('implementation-no-tests', 'step-commit') and SPEC not in changed: errors.append('regression spec missing')
         results.append({'case':case['id'], 'filesystem_and_command_checks':'PASS' if not errors else 'FAIL', 'errors':errors, 'changed':changed, 'runner_calls':sum('--help' not in event['args'] for event in events)})
     print(json.dumps(results, indent=2))
     return all(not r['errors'] for r in results)
