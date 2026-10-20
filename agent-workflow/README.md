@@ -19,10 +19,10 @@ Describe the work. The manager assigns each job to an agent, checks the result, 
 | Agent | Skills |
 | --- | --- |
 | `planner` | `think`, `plan` |
-| `developer` | `develop`, `write-unit`, `write-e2e`, `resolve-review` |
+| `developer` | `develop`, `write-unit`, `resolve-review`, `pr`, `testing-guide` |
 | `reviewer` | `review` |
 | `unit-tester` | `run-unit` |
-| `e2e-tester` | `run-e2e` |
+| `e2e-tester` | `write-e2e`, `run-e2e` |
 | `helper` | `triage-ticket` |
 
 Task docs are saved in `~/.agent-workflow/tasks/`. More in [architecture](docs/architecture/ARCHITECTURE.md).

@@ -23,20 +23,23 @@ Own decisions, scope, order, user communication, and acceptance. Assign every jo
 | `helper` | `triage-ticket` | Ticket requirements or queue triage |
 | `developer` | `develop` | Implement a plan step or production change, or diagnose a test failure |
 | | `write-unit` | Write or fix unit specs |
-| | `write-e2e` | Write or fix e2e specs, or explore UI |
 | | `resolve-review` | Fix or disposition findings in a saved review |
+| | `pr` | Write the PR title and body |
+| | `testing-guide` | Write the manual testing guide |
 | `unit-tester` | `run-unit` | Run unit tests |
-| `e2e-tester` | `run-e2e` | Run e2e tests or open the e2e UI |
+| `e2e-tester` | `write-e2e` | Write or fix e2e specs, or explore UI |
+| | `run-e2e` | Run e2e tests or open the e2e UI |
 | `reviewer` | `review` | Review a diff or branch |
 
 ## Ticket flow
 
 - `think`, then `plan` after the user says to plan. Stop for plan approval.
-- Then `develop` runs one step at a time, with one approval per step.
+- Then `develop` runs the steps in order. With per-step commits, plan approval covers every step and commit; the user is asked only on the stop conditions in [step-execution.md](../develop/references/step-execution.md).
 - `develop` returns `Open: run the specs`: assign unit specs to `unit-tester` and e2e specs to `e2e-tester`. Send a failure, with the failed specs and the failure log path, to the same `developer`.
-- When the same spec still fails after two fixes, stop and ask the user.
+- When the same spec still fails after two fixes, or final validation or the review still fails after the fixes, stop and ask the user. Never loop.
 - `develop` returns `Open: ready for review`: send the baseline and scope to `reviewer`.
 - A saved review approves no fixes. Resolve the user's selected findings first.
+- When the review is approved and the ticket is done, assign `developer` `pr` and `testing-guide` together. Show the PR title and both paths. The user opens the PR.
 
 ## Tests
 
@@ -67,6 +70,7 @@ Agents stay alive for the ticket. Record each agent's ID and tier from its start
 
 - `planner`: think, then plan, then the user's answers.
 - `developer`: every later plan step of the same tier, follow-ups, gaps you found, review fixes. A failure goes to the developer that did the step.
+- `e2e-tester`: writing and rerunning e2e specs.
 - `unit-tester`, `e2e-tester`: re-running the failed and changed specs after a developer changes the test or code.
 - `reviewer`: re-review of the same branch, which updates `review.md` in place.
 

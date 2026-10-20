@@ -7,15 +7,15 @@ Three tiers: light (haiku), standard (sonnet), advanced (opus). The manager pass
 | `planner` | `think`, `plan` | advanced | opus | high | |
 | `helper` | `triage-ticket` | light | haiku | low | |
 | `unit-tester` | `run-unit` | light | haiku | low | |
-| `e2e-tester` | `run-e2e` | light | haiku | low | |
-| `developer` | `develop`, `write-unit`, `write-e2e`, `resolve-review` | standard | sonnet | medium | advanced: opus, medium, for a complicated step |
+| `e2e-tester` | `write-e2e`, `run-e2e` | standard | sonnet | medium | |
+| `developer` | `develop`, `write-unit`, `resolve-review`, `pr`, `testing-guide` | standard | sonnet | medium | advanced: opus, medium, for a complicated step |
 | `reviewer` | `review` | advanced | opus | medium | standard: sonnet, medium, for a simple change; advanced: opus, high, when the user asks |
 
 A ticket can hold one `developer` per tier, each reused across steps of its tier.
 
 `developer` never runs tests. Every unit run goes to `unit-tester` and every e2e run to `e2e-tester`, and a failure goes back to `developer` for diagnosis and a fix.
 
-Each skill's `metadata.tier` and `effort` match its agent's default.
+Each skill's `metadata.tier` and `effort` match its agent's default, except `run-e2e`, which is light when called alone.
 
 Other hosts start no agents, so a skill runs on the chat's own model.
 
@@ -25,7 +25,7 @@ flowchart LR
         think[think: high] & plan[plan: high] & rev[review: medium]
     end
     subgraph standard [standard: sonnet, medium]
-        dev[develop] & wu[write-unit] & we[write-e2e] & rr[resolve-review]
+        dev[develop] & wu[write-unit] & we[write-e2e] & rr[resolve-review] & pr[pr] & tg[testing-guide]
     end
     subgraph light [light: haiku, low]
         tri[triage-ticket] & ru[run-unit] & re[run-e2e]

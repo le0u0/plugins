@@ -8,9 +8,9 @@ The manager assigns each job to one agent. An agent does the job itself with the
 | --- | --- |
 | `planner` | `think`, `plan` |
 | `helper` | `triage-ticket` |
-| `developer` | `develop`, `write-unit`, `write-e2e`, `resolve-review` |
+| `developer` | `develop`, `write-unit`, `resolve-review`, `pr`, `testing-guide` |
 | `unit-tester` | `run-unit` |
-| `e2e-tester` | `run-e2e` |
+| `e2e-tester` | `write-e2e`, `run-e2e` |
 | `reviewer` | `review` |
 
 Start the plugin agent, such as `agent-workflow:developer`; it preloads its skills.
@@ -26,7 +26,7 @@ Tiers: light is `haiku`, standard is `sonnet`, advanced is `opus`. Every agent s
 | `planner` | `opus` | high | |
 | `helper` | `haiku` | low | |
 | `unit-tester` | `haiku` | low | |
-| `e2e-tester` | `haiku` | low | |
+| `e2e-tester` | `sonnet` | medium | |
 | `developer` | `sonnet` | medium | `opus`, medium, for a complicated step |
 | `reviewer` | `opus` | medium | `sonnet`, medium, for a simple change; `opus`, high, when the user asks |
 
@@ -70,7 +70,7 @@ No narrative, no restated plan, no code excerpts.
 
 ## Test report
 
-`unit-tester` and `e2e-tester` end with this report instead of the one above, at most eight lines:
+`unit-tester`, and `e2e-tester` after a run, end with this report instead of the one above, at most eight lines:
 
 ```text
 Status: done | failed | blocked
@@ -78,6 +78,7 @@ Result: <counts>; failed: <spec file and test name each, or none>
 Commands: <command → real exit code>
 Changed: <files, or none>
 Artifacts: <failure log path, or none>
+Affected: <other specs that use the changed code, helpers, or selectors, not run, or none>
 Open: <or none>
 ```
 
@@ -85,7 +86,7 @@ Open: <or none>
 - **failed:** list each failed spec file and test name in `Result`. `Artifacts` is a log holding only the failed tests' output (name, error, top stack lines), saved in the task folder, else the system temp directory. Never send the full output. Name no cause.
 - **blocked:** `Open` has the reason and what the manager or user should do, such as `approve a full-suite run` or `start the backend at BASE_URL`. No log.
 
-On a rerun after a fix, run only the previously failed specs plus the specs the fix changed. Run the wider scope only when the manager asks.
+Run only the specs the task changed, never the full suite or a whole folder, unless the user asks. On a rerun after a fix, run only the previously failed specs plus the specs the fix changed. List other specs that may be affected under `Affected`, and do not run them.
 
 ## Project references
 
@@ -99,4 +100,4 @@ When nothing applies, say so and follow the nearest comparable code. Never copy 
 
 ## Authorization
 
-Routing never authorizes tests, resets, commits, pushes, external writes, or broader files.
+Routing never authorizes tests, resets, commits, pushes, external writes, or broader files. Approving a plan whose `Delivery` is per-step commits authorizes each step's commit and the file deletions the plan lists, and nothing else.
