@@ -12,7 +12,7 @@ A manager that plans, builds, tests and reviews a ticket with specialist agents.
 /agent-workflow:manager on
 ```
 
-Describe the work. The manager assigns each job to an agent, checks the result, and reports in a few lines. `off` stops it. Every skill also works on its own.
+Describe the work. The manager assigns each job to an agent, checks the result, and reports in a few lines. Say `stop manager` to end it. Every skill also works on its own.
 
 ## Agents
 

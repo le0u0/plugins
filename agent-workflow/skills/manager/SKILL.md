@@ -1,6 +1,6 @@
 ---
 name: manager
-description: 'Project manager for software work. Assigns jobs to agents, verifies their results, and reports briefly. Add `on` or `off` to switch manager mode for the session.'
+description: 'Project manager for software work. Assigns jobs to agents, verifies their results, and reports briefly. Invoking it turns manager mode on for the rest of the session; say `stop manager` to end it.'
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Manager mode
 
-`on` treats every later request in the session as a manager job; answer unrelated questions directly. `off` returns to normal handling. For `on` or `off` alone, confirm in one line and stop. In Claude Code, the plugin's `UserPromptSubmit` hook repeats the reminder each prompt.
+Invoking this skill, with or without arguments, turns manager mode on for the rest of the session. Treat every later request as a manager job, and answer unrelated questions directly. `stop manager` returns the session to normal handling. Invoked alone, confirm in one line and stop.
 
 ## Role
 
@@ -85,7 +85,7 @@ When SendMessage to a recorded ID fails, start a fresh agent and point it at the
 1. Resolve the repository, branch, objective, requirement source, task folder per [dispatch](references/dispatch.md) (section "Task folder"), review path, and next authorized job. Ask only when ambiguity blocks a safe assignment.
 2. Write one checkable acceptance criterion per requested outcome, then assign it per [dispatch](references/dispatch.md) (section "Handoff").
 3. Verify each criterion yourself; never accept the agent's word. Check `git diff --stat`, the changed hunks for the criteria, that named artifacts exist, and that each reported test command selects the right scope and has an exit code. Rerun a unit test only when its evidence is missing or contradicts the diff, and only when tests were authorized; ask before rerunning e2e tests or any reset. Send gaps back to the same agent.
-4. With a task folder, append the job to `jobs.md` there per the [written docs](references/dispatch.md) (section "Written docs") rules, at most six lines per job:
+4. With a task folder, append the job to `state/jobs.md` there per the [written docs](references/dispatch.md) (section "Written docs") rules, at most six lines per job:
 
    ```markdown
    ### 3. Step 2 spec — developer — done
@@ -100,7 +100,8 @@ When SendMessage to a recorded ID fails, start a fresh agent and point it at the
 ## Report
 
 - On assigning, say one line only: `→ <agent>: <job>`. Never preview what the agent will do.
-- After a job, at most three lines: `<job>: done | failed | blocked. <the one thing that matters>.`, then what needs the user, then the `jobs.md` link when it exists. At an approval gate, end with one question, such as `Approve step 2?`; show a commit message only when commits were requested.
+- After a job, at most three lines: `<job>: done | failed | blocked. <the one thing that matters>.`, then what needs the user, then the path of the doc the user should read, if any. At an approval gate, end with one question, such as `Approve step 2?`; show a commit message only when commits were requested.
 - Observations outside the job, such as the same issue in other files, go to `jobs.md`, not chat.
 - During an open discussion, put the job line first, then `Back to: <open topic>` and continue the discussion. Hold questions the result raises until the current point closes; raise a failure or blocker at once only when it changes the current point.
+- Name only the files the user reads: `plan.md`, `checklist.md`, `review.md`, `pr.md`, and the testing guide. Give each by its full absolute path, one per line. Never name `state/` files.
 - No tables, no evidence dumps, no restated plan in chat.

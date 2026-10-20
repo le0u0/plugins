@@ -63,6 +63,6 @@ flowchart TD
 - **Plugin files live outside the repo.** Tasks, reviews, domain notes, the commit format, the PR text and the testing guide are all saved under `~/.agent-workflow/`, so any project can use them.
 - **Reviewer reuse.** The same `reviewer` re-reviews the ticket and updates `review.md` in place. Trade-off: a re-review carries its earlier findings, so it is less independent than a fresh read.
 - **Manager verifies, not trusts.** An agent's "done" is a claim. The manager checks the diff, artifacts, and test result itself before reporting.
-- **Short reports.** Agents report in at most eight lines; the manager announces a job in one line and reports it in at most three. Detail lives in `jobs.md` in the task folder.
+- **Short reports.** Agents report in at most eight lines; the manager announces a job in one line and reports it in at most three. Detail lives in `state/jobs.md` in the task folder.
 - **Model by agent and tier.** Skills are grouped by weight into light, standard and advanced. The manager passes `model` and `effort` on every start and may start a developer or reviewer at another tier for a complicated or simple job. See [models](models.md).
-- **Claude Code first.** Agents and hooks work only in Claude Code. Skills stay plain `SKILL.md` files, so other hosts run them directly on the chat's own model, with no subagents.
+- **Claude Code first.** Agents work only in Claude Code. Skills stay plain `SKILL.md` files, so other hosts run them directly on the chat's own model, with no subagents.
