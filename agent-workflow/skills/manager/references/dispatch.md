@@ -36,6 +36,10 @@ A resumed agent keeps its model and effort. Use the family alias (`haiku`, `sonn
 
 Task docs live in `~/.agent-workflow/tasks/{ticket}-{description}/`; see [planning.md](../../plan/references/planning.md) (section "Task folder") for its contents. Find it by globbing `~/.agent-workflow/tasks/{ticket}*`, with the ticket key from the user's message or the branch name. Several matches: use the oldest. None: ask; never assume there is no folder. Never write task docs to a scratchpad or temp directory.
 
+## Storage
+
+Every file this plugin writes goes under `~/.agent-workflow/`, never into the repository being worked on: `tasks/` for task docs, `reviews/` for reviews, `projects/{repository}/` for domain notes. Source and test changes the job requires are the only repository writes.
+
 ## Written docs
 
 Applies to every markdown file an agent writes, such as `plan.md`, `think.md`, `triage.md`, `investigation.md`, `checklist.md`, `jobs.md`, `review.md`, or any other the agent decides to create. Create an extra doc only when no named doc fits.
