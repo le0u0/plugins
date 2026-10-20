@@ -7,9 +7,9 @@ Shared terms for this plugin.
 | Term | Meaning |
 | --- | --- |
 | Manager | `manager`, the main thread. Assigns each job to an agent, verifies the result itself, and decides the next step. Never does agent work. |
-| Agent | `planner`, `helper`, `developer`, `unit-tester`, `e2e-tester`, or `reviewer`. Holds several skills and does each job itself. Only agents carry role names. |
+| Agent | `planner`, `helper`, `developer`, `e2e-tester`, or `reviewer`. Holds several skills and does each job itself. Only agents carry role names. |
 | Skill | An action, such as `write-unit`. Called directly or used by an agent. |
-| Tier | A skill's `metadata.tier` (light, standard or advanced), mapped to haiku, sonnet and opus. Each agent has a default tier and effort; the table is in `dispatch.md`. |
+| Tier | A skill's `metadata.tier` (light, standard or advanced), mapped to haiku, sonnet and opus. Each agent has a default tier and effort; the table is in `agents.md`. |
 
 ## Skill structure
 

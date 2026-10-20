@@ -1,6 +1,6 @@
 # Saved Review
 
-Follow the [written docs](../../manager/references/dispatch.md) (section "Written docs") rules. Issue and Fix are the main points, one line each.
+Follow the [written docs](../../manager/references/written-docs.md) rules. Issue and Fix are the main points, one line each.
 
 ```markdown
 # Code review

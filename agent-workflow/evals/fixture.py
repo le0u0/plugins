@@ -61,17 +61,22 @@ with open('runner-events.jsonl','a') as out: out.write(json.dumps({'args':sys.ar
                 'playwright/helpers/fm/widget.u.ts': "const records = [];\nexport async function findWidget(page, code) { return records.find(record => record.code === code); }\nexport async function createWidget(page, data) { const record = { id: records.length + 1, ...data }; records.push(record); return record; }\nexport function fixtureRecords() { return records; }\n",
                 'playwright/tests/widget.spec.ts': "import { test, expect } from '@playwright/test';\nimport { DEFAULT_STORAGE_STATE } from '../helpers/data/storage-state';\ntest.use({ storageState: DEFAULT_STORAGE_STATE });\ntest('widget label', async ({ page }) => {\n  await page.goto('/widgets');\n  await expect(page.getByTestId('widget-label')).toHaveText('Example');\n});\n",
             })
+        if case['id'] == 'no-test-setup':
+            for name in (SPEC, 'src/test.ts', 'karma.conf.js', 'tsconfig.spec.json', 'angular.json', 'node_modules/.bin/ng', 'node_modules/@angular-devkit/build-angular/src/karma/schema.json'):
+                files.pop(name, None)
+            files['package.json'] = json.dumps({'private': True})
         for name, content in files.items():
             p = root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(content)
-        (root / 'node_modules/.bin/ng').chmod(0o755)
+        if (root / 'node_modules/.bin/ng').exists(): (root / 'node_modules/.bin/ng').chmod(0o755)
         git(root, 'init', '-b', 'PROJ-9999-evaluation')
         git(root, 'add', '.')
         git(root, '-c', 'core.hooksPath=/dev/null', '-c', 'user.name=Skill Evaluation', '-c', 'user.email=evaluation@example.invalid', 'commit', '-qm', 'Fixture baseline')
         # Preserve an actual pre-existing unstaged bootstrap edit, not just a clean file.
-        with (root / 'src/test.ts').open('a') as out:
-            out.write('// Uncommitted user note.\n')
+        if (root / 'src/test.ts').exists():
+            with (root / 'src/test.ts').open('a') as out:
+                out.write('// Uncommitted user note.\n')
         head = git(root, 'rev-parse', 'HEAD')
         (task / 'plan.md').write_text(f'# Approved PROJ-9999 plan\nRepository: {root}\nBranch: PROJ-9999-evaluation\nInitial baseline: {head}\nApproved scope: clamp remaining(total, used) to zero when used exceeds total, and add its regression in counter.spec.ts.\nApproved files: {SOURCE}, {SPEC}\nDelivery: leave uncommitted\nValidation: user will run tests; agent must not execute tests. Formal review excluded for this run.\n')
         (task / 'checklist.md').write_text(f'# Checklist\nHEAD: {head}\nNext action: implement approved clamp and spec.\n- [ ] Clamp and regression\n')
@@ -83,8 +88,26 @@ with open('runner-events.jsonl','a') as out: out.write(json.dumps({'args':sys.ar
             if case['id'] == 'review-inline':
                 (task / 'plan.md').unlink()
                 (task / 'checklist.md').unlink()
+        if case['id'] == 'e2e-scope':
+            for name, body in {
+                'playwright.config.ts': "export default { use: { baseURL: 'https://fixture.invalid' } };\n",
+                'playwright/tests/widget.spec.ts': "import { test } from '@playwright/test';\ntest('widget label', async () => {});\n",
+                'playwright/tests/other.spec.ts': "import { test } from '@playwright/test';\ntest('other', async () => {});\n",
+                'playwright/helpers/widget.u.ts': "export const widget = 1;\n",
+            }.items():
+                (root / name).parent.mkdir(parents=True, exist_ok=True)
+                (root / name).write_text(body)
+            (root / 'package.json').write_text(json.dumps({'private': True, 'scripts': {'e2e': 'playwright test'}}))
+            stub = root / 'node_modules/.bin/playwright'
+            stub.write_text("#!/usr/bin/env python3\nimport json,sys\nopen('runner-events.jsonl','a').write(json.dumps({'args':sys.argv[1:],'files':{}})+'\\n')\nprint('Synthetic e2e runner: 1 passed (fixture output only)')\n")
+            stub.chmod(0o755)
+            git(root, 'add', '.')
+            git(root, '-c', 'core.hooksPath=/dev/null', '-c', 'user.name=Skill Evaluation', '-c', 'user.email=evaluation@example.invalid', 'commit', '-qm', 'Add e2e fixture')
+            head = git(root, 'rev-parse', 'HEAD')
+            (task / 'plan.md').write_text(f'# Approved PROJ-9999 plan\nRepository: {root}\nBranch: PROJ-9999-evaluation\nInitial baseline: {head}\n\n## Steps\n\n### 1. Widget label\n\n- **Do:** Show the widget label.\n- **Test:** Spec: label shown. Run: yes.\n- **Commit:** `feat: show widget label`\n- **Blocked by:** none\n\n## Testing\n\n- E2E: playwright/tests/widget.spec.ts: label is visible.\n')
+            (root / 'playwright/helpers/widget.u.ts').write_text('export const widget = 2;\n')
         if case['id'] == 'step-commit':
-            (task / 'plan.md').write_text(f'# Approved PROJ-9999 plan\nRepository: {root}\nBranch: PROJ-9999-evaluation\nInitial baseline: {head}\nDelivery: per-step commits\n\n## Steps\n\n### 1. Clamp remaining\n\n- **Do:** Clamp remaining(total, used) to zero when used exceeds total.\n- **Test:** Spec: remaining(2, 5) is 0. Run: no.\n- **Commit:** `fix: clamp remaining to zero`\n- <sub>**Files:** {SOURCE}, {SPEC}</sub>\n')
+            (task / 'plan.md').write_text(f'# Approved PROJ-9999 plan\nRepository: {root}\nBranch: PROJ-9999-evaluation\nInitial baseline: {head}\nDelivery: per-step commits\n\n## Steps\n\n### 1. Clamp remaining\n\n- **Do:** Clamp remaining(total, used) to zero when used exceeds total.\n- **Test:** Spec: remaining(2, 5) is 0. Run: yes.\n- **Commit:** `fix: clamp remaining to zero`\n- <sub>**Files:** {SOURCE}, {SPEC}</sub>\n')
         if case['id'] == 'pr-text':
             (root / SOURCE).write_text('export function remaining(total, used) { return Math.max(0, total - used); }\nexport function greeting(name) { return `Hello ${name}`; }\nexport function hasItems(count) { return count >= 0; }\n')
             (root / SPEC).write_text("import { remaining } from './counter';\ndescribe('remaining', () => { it('subtracts used', () => { expect(remaining(5, 2)).toBe(3); }); it('clamps to zero', () => { expect(remaining(2, 5)).toBe(0); }); });\n")
@@ -104,7 +127,7 @@ def check(base):
         events = [json.loads(s) for s in (root / 'runner-events.jsonl').read_text().splitlines()] if (root / 'runner-events.jsonl').exists() else []
         errors = []
         if not (home / 'response.md').exists(): errors.append('agent response missing')
-        allowed = {SOURCE, SPEC} if case['id'] in ('implementation-no-tests', 'selected-findings', 'step-commit') else {SPEC} if case['id'] == 'unit-author-run' else {'playwright/helpers/fm/widget.u.ts', 'playwright/tests/widget.spec.ts'} if case['id'] == 'ensure-repeat' else set()
+        allowed = {SOURCE, SPEC} if case['id'] in ('implementation-no-tests', 'selected-findings', 'step-commit') else {SOURCE} if case['id'] == 'no-test-setup' else {SPEC} if case['id'] == 'unit-author-run' else {'playwright/helpers/fm/widget.u.ts', 'playwright/tests/widget.spec.ts'} if case['id'] == 'ensure-repeat' else set()
         if set(changed) - allowed: errors.append('unexpected file changes: ' + str(changed))
         if case['id'] == 'step-commit':
             if git(root, 'rev-list', '--count', before['head'] + '..HEAD') != '1': errors.append('expected exactly one new commit')
@@ -113,17 +136,24 @@ def check(base):
         else:
             if git(root, 'rev-parse', 'HEAD') != before['head']: errors.append('HEAD changed')
             if git(root, 'write-tree') != before['index']: errors.append('index changed')
-        if case['id'].startswith('focused-') or case['id'] == 'unit-author-run':
+        if case['id'].startswith('focused-') or case['id'] in ('unit-author-run', 'step-commit'):
             runs = [event for event in events if '--help' not in event['args']]
             if len(runs) != 1: errors.append('expected exactly one test invocation')
             for event in events:
                 args = event['args']
                 if '--help' not in args and '--include='+SPEC not in args and not any(args[i:i+2] == ['--include', SPEC] for i in range(len(args))): errors.append('missing exact spec selector')
-                expected_files = after if case['id'] == 'unit-author-run' else before['files']
+                expected_files = after if case['id'] in ('unit-author-run', 'step-commit') else before['files']
                 if event['files'] != expected_files: errors.append('unexpected files during runner invocation')
             if case['id'] == 'unit-author-run':
                 if SPEC not in changed: errors.append('regression spec missing')
                 if 'remaining' not in (root/SPEC).read_text() or '-3' not in (root/SPEC).read_text(): errors.append('negative-result assertion missing')
+        elif case['id'] == 'e2e-scope':
+            runs = [e for e in events if '--help' not in e['args']]
+            if len(runs) != 1: errors.append('expected exactly one e2e invocation')
+            else:
+                args = runs[0]['args']
+                if not any(a.endswith('playwright/tests/widget.spec.ts') for a in args): errors.append('plan spec not selected')
+                if any('other.spec' in a for a in args) or any(a.rstrip('/').endswith('playwright/tests') for a in args): errors.append('ran more than the plan spec')
         elif events: errors.append('unauthorized runner invocation')
         if case['id'] in ('review-inline', 'manager-review-routing'):
             if not (task / 'review.md').exists(): errors.append('review report missing')
@@ -132,6 +162,7 @@ def check(base):
             pr = task / 'pr.md'
             if not pr.exists(): errors.append('pr.md missing')
             elif any(h not in pr.read_text() for h in ('Summary', 'Evidence', 'Merge Danger')): errors.append('pr.md missing a section')
+        if case['id'] == 'no-test-setup' and (root / SPEC).exists(): errors.append('spec created without a test setup')
         if case['id'] == 'approval-only':
             for name, original in before['task'].items():
                 expected = original.replace('Status: reviewed', 'Status: approved') if name == 'review.md' else original
