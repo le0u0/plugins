@@ -1,6 +1,6 @@
 # Attachments
 
-Cache every attachment of every fetched ticket, any type, including embedded images, under the task folder's `attachments/{ticket}/` with original names.
+Cache every attachment of every fetched ticket, any type, including embedded images, under the task folder's `attachments/{ticket}/` with original names. Before downloading, look for `~/.agent-workflow/tasks/*/attachments/{ticket}/`; reuse files already there. Create the ticket's folder only when it has a file.
 
 - **With the tracker's MCP:** use its attachment download tool with that folder as the output path, and run any returned download command at once; such links often expire quickly.
 - **Without MCP:** use the tracker's REST API with an API token from the environment, writing to `<task folder>/attachments/<ticket>/<filename>`.
