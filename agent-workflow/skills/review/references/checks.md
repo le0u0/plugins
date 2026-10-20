@@ -9,3 +9,7 @@ Apply each relevant check to every changed file type: source, templates, styles,
 - **Unit tests:** placement beside the code, meaningful assertions, mocked dependencies, critical and invalid inputs, unloaded state, and regression coverage.
 - **End-to-end tests:** stable locators, helper reuse, deterministic waits, response assertions, test-data ownership, and the requested run strategy.
 - **Correctness:** runtime failures, wrong or stale data, regressions, missing behavior, and unnecessary changes.
+
+## Code smells
+
+Check the changed lines against [smells.md](smells.md).
